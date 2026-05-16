@@ -1,4 +1,5 @@
 venv/
+
 __pycache__/
 *.pyc
 
@@ -8,12 +9,12 @@ OllamaModels/
 
 .cache/
 
-models/
+# models/
 
 *.safetensors
 
-node_modules/
+# node_modules/
 
-dist/
+# dist/
 
-build/
+# build/
