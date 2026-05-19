@@ -4,19 +4,17 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 
 MODEL_NAME = "phi3"
 
-SYSTEM_PROMPT = """
-You are WARHEAD, an intelligent AI assistant.
-Give short, fast, direct responses.
-Be conversational and concise.
-"""
-
-def get_ai_response(user_input):
+def get_ai_response(user_input, memory_context=""):
 
     prompt = f"""
-    {SYSTEM_PROMPT}
+    You are TONY, an intelligent AI assistant.
+
+    Previous Memory:
+    {memory_context}
 
     User: {user_input}
-    WARHEAD:
+
+    TONY:
     """
 
     payload = {
@@ -29,19 +27,18 @@ def get_ai_response(user_input):
         }
     }
 
-    try:
+    response = requests.post(
+        OLLAMA_URL,
+        json=payload
+    )
 
-        response = requests.post(
-            OLLAMA_URL,
-            json=payload
-        )
+    data = response.json()
 
-        data = response.json()
+    if "response" in data:
 
         return data["response"].strip()
 
-    except Exception as e:
+    else:
 
-        print(e)
-
-        return "AI connection failed"
+        print("Ollama Error:", data)
+        return "I encountered an AI processing error."

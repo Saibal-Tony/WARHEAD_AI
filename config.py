@@ -1,0 +1,11 @@
+AI_NAME = "TONY"
+
+VOICE_ENABLED = True
+
+VISION_ENABLED = True
+
+GESTURE_ENABLED = True
+
+PERSONALITY = "smart"
+
+OWNER = "Saibal"

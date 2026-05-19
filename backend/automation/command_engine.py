@@ -40,6 +40,13 @@ def execute_command(command, speak):
 
         os.system("shutdown /r /t 5")
 
+    elif "calculator" in command:
+        speak("Opening Calculator")
+
+        os.system("calc")
+
+        return True
+
     else:
         return False
 
