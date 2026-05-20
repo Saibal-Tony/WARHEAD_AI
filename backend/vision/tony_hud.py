@@ -1,8 +1,12 @@
+import random
+
 import sys
 from turtle import pen
 
 import psutil
 from datetime import datetime
+
+from math import cos, sin, radians
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -208,6 +212,22 @@ class TonyHUD(QWidget):
 
         self.scan_timer.start(20)
 
+        self.core_timer = QTimer()
+
+        self.core_timer.timeout.connect(
+            self.animate_core
+        )
+
+        self.core_timer.start(30)
+
+        self.wave_timer = QTimer()
+
+        self.wave_timer.timeout.connect(
+            self.animate_wave
+        )
+
+        self.wave_timer.start(80)
+
         self.system_timer = QTimer()
 
         self.system_timer.timeout.connect(
@@ -223,6 +243,15 @@ class TonyHUD(QWidget):
         self.glow_direction = 1
 
         self.scan_y = 0
+
+        self.rotation_angle = 0
+
+        self.wave_values = [
+
+            random.randint(10, 60)
+
+            for _ in range(40)
+        ]
 
     def animate_status(self):
 
@@ -264,10 +293,141 @@ class TonyHUD(QWidget):
             self.scan_y = 0
 
         self.update()
+    
+    def animate_core(self):
+
+        self.rotation_angle += 2
+
+        if self.rotation_angle >= 360:
+
+            self.rotation_angle = 0
+
+        self.update()
+
+    def animate_wave(self):
+
+        self.wave_values = [
+
+            random.randint(10, 60)
+
+            for _ in range(40)
+        ]
+
+        self.update()
 
     def paintEvent(self, event):
 
         painter = QPainter(self)
+
+        # ---------------- AI CORE ----------------
+
+        center_x = self.width() // 2
+
+        center_y = self.height() // 2
+
+        radius = 90
+
+        # OUTER RING
+
+        core_pen = QPen(
+            QColor(0, 255, 255, 180)
+        )
+
+        core_pen.setWidth(4)
+
+        painter.setPen(core_pen)
+
+        painter.drawEllipse(
+            center_x - radius,
+            center_y - radius,
+            radius * 2,
+            radius * 2
+        )
+
+        # INNER RING
+
+        inner_radius = 60
+
+        inner_pen = QPen(
+            QColor(0, 180, 255, 180)
+        )
+
+        inner_pen.setWidth(3)
+
+        painter.setPen(inner_pen)
+
+        painter.drawEllipse(
+            center_x - inner_radius,
+            center_y - inner_radius,
+            inner_radius * 2,
+            inner_radius * 2
+        )
+
+        # ROTATING NODE
+
+        angle = radians(
+            self.rotation_angle
+        )
+
+        node_x = int(
+            center_x + cos(angle) * radius
+        )
+
+        node_y = int(
+            center_y + sin(angle) * radius
+        )
+
+        painter.setBrush(
+            QColor(0, 255, 255)
+        )
+
+        painter.drawEllipse(
+            node_x - 8,
+            node_y - 8,
+            16,
+            16
+        )
+
+        # CORE TEXT
+
+        painter.setPen(
+            QColor(255, 255, 255)
+        )
+
+        painter.drawText(
+            center_x - 35,
+            center_y + 5,
+            "TONY"
+        )
+
+        # ---------------- VOICE WAVEFORM ----------------
+
+        wave_pen = QPen(
+            QColor(0, 255, 255)
+        )
+
+        wave_pen.setWidth(3)
+
+        painter.setPen(wave_pen)
+
+        start_x = 80
+
+        base_y = self.height() - 80
+
+        spacing = 12
+
+        for i, value in enumerate(
+            self.wave_values
+        ):
+
+            x = start_x + i * spacing
+
+            painter.drawLine(
+                x,
+                base_y - value,
+                x,
+                base_y + value
+            )
 
         # SCAN LINE
 
