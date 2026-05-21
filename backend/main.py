@@ -10,6 +10,12 @@ sys.path.append(
     )
 )
 
+from memory.memory_engine import (
+    remember,
+    recall,
+    get_category
+)
+
 from voice.voice_engine import speak, listen
 
 from config import AI_NAME
@@ -17,11 +23,6 @@ from config import AI_NAME
 from automation.command_engine import execute_command
 
 from ai_brain.chatbot import get_ai_response
-
-from memory.memory_engine import (
-    remember,
-    recall
-)
 
 from ai_brain.intent_router import (
     detect_intent
@@ -72,29 +73,41 @@ while True:
 
         elif intent == "memory":
 
+            print("Memory intent activated")
+            
+            # ---------------- FAVORITES ----------------
+
             if "what do i love" in command:
 
-                favorite = recall("favorite")
+                favorite = recall(
+                    "favorites",
+                    "love"
+                )
 
                 if favorite:
 
-                    speak(f"You love {favorite}")
+                    speak(
+                        f"You love {favorite}"
+                    )
 
                 else:
 
-                    speak("I do not know yet")
+                    speak(
+                        "I do not know yet"
+                    )
 
                 continue
 
             if "i love" in command:
 
                 thing = command.replace(
-                    "i love",
-                    ""
+                "i love",
+                ""
                 ).strip()
 
                 remember(
-                    "favorite",
+                    "favorites",
+                    "love",
                     thing
                 )
 
@@ -102,6 +115,49 @@ while True:
                     f"I will remember that "
                     f"you love {thing}"
                 )
+
+                continue
+
+            # ---------------- DEVICES ----------------
+
+            if "i bought" in command:
+
+                thing = command.replace(
+                    "i bought",
+                    ""
+                ).strip()
+
+                remember(
+                    "devices",
+                    "recent_purchase",
+                    thing
+                )
+
+                speak(
+                    f"I will remember that "
+                    f"you bought {thing}"
+                )
+
+                continue
+
+            if "what did i buy" in command:
+
+                purchase = recall(
+                    "devices",
+                    "recent_purchase"
+                )
+
+                if purchase:
+
+                    speak(
+                        f"You bought {purchase}"
+                    )
+
+                else:
+
+                    speak(
+                        "I do not remember"
+                    )
 
                 continue
 
@@ -123,34 +179,3 @@ while True:
 
         speak(response)
 
-        if "what do i love" in command:
-
-            favorite = get_memory("favorite")
-
-            if favorite:
-
-                speak(f"You love {favorite}")
-
-            else:
-
-                speak("I do not know yet")
-
-            continue
-
-        if "i love" in command:
-
-            thing = command.replace("i love", "").strip()
-
-            save_memory("favorite", thing)
-
-            speak(f"I will remember that you love {thing}")
-
-            continue
-
-        print(f"{AI_NAME} is thinking...")
-
-        response = get_ai_response(command)
-
-        print(f"{AI_NAME}: {response}")
-
-        speak(response)

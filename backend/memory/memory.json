@@ -1,4 +1,9 @@
 {
-    "favorite_food": "chocolate",
-    "likes": "chocolate"
+    "favorites": {
+        "food": "chocolate",
+        "love": "what do"
+    },
+    "devices": {
+        "laptop": "Lenovo"
+    }
 }
