@@ -1,6 +1,8 @@
 import sys
 import os
 
+from brain.state import state
+
 sys.path.append(
     os.path.abspath(
         os.path.join(
@@ -36,6 +38,12 @@ while True:
 
     command = listen()
 
+    if command:
+
+        state.add_log(
+            f"[USER] {command}"
+        )
+
     if command == "":
         continue
 
@@ -44,6 +52,10 @@ while True:
     intent = detect_intent(command)
 
     print(f"Intent: {intent}")
+
+    state.add_log(
+        f"[INTENT] {intent}"
+    )
 
     if WAKE_WORD in command:
 
@@ -176,6 +188,10 @@ while True:
         response = get_ai_response(command)
 
         print(f"{AI_NAME}: {response}")
+
+        state.add_log(
+            f"[TONY] {response}"
+        )
 
         speak(response)
 
