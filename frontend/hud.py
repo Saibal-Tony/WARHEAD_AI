@@ -7,6 +7,10 @@ from PyQt6.QtWidgets import (
     QHBoxLayout
 )
 
+from widgets.vision_panel import (
+    VisionPanel
+)
+
 from PyQt6.QtCore import (
     Qt,
     QTimer
@@ -99,6 +103,14 @@ class TonyHUD(QWidget):
             self.system_panel
         )
 
+        # ---------------- BOTTOM VISION ----------------
+
+        self.vision_panel = VisionPanel()
+
+        center_layout.addWidget(
+            self.vision_panel
+        )
+        
         self.setLayout(
             main_layout
         )
