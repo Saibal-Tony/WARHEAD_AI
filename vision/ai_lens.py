@@ -71,7 +71,7 @@ while True:
     if key == ord('q'):
         break
 
-# ---------------- CLEANUP ----------------
+# ---------------- CLEANUP ------------------
 
 camera.release()
 
